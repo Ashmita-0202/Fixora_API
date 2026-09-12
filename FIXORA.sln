@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35521.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FIXORA.API", "FIXORA.API\FIXORA.API.csproj", "{5A521B19-B2ED-4460-B296-94705636483D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{76D9938A-DFEC-4561-A4CA-D5C1A52D65C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{A0E9D759-8341-4321-A90D-2B4741AF60E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{730F4EAF-431C-44FF-80DD-6CCF8F168E1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{365DC2D1-BE3D-48C0-BA35-BEB42AF7246F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fix.Authentication.Application", "Fix.Authentication.Application\Fix.Authentication.Application.csproj", "{6AFC41D3-9543-4A7E-BE45-79FDE2557CFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fix.Authentication.Infrastructure", "Fix.Authentication.Infrastructure\Fix.Authentication.Infrastructure.csproj", "{781B729E-89E3-4F48-8334-E8532A605AAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4F69EFDE-CBD7-4E50-A4D6-084FE2B74447}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fix.Shared.Domain", "Fix.Shared.Domain\Fix.Shared.Domain.csproj", "{87EDB70F-60C9-48F8-8A75-ADC695246498}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fix.Shared.Infrastructure", "Fix.Shared.Infrastructure\Fix.Shared.Infrastructure.csproj", "{EA7F71A8-BE7C-4E85-8A84-5206BBDB4F33}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A521B19-B2ED-4460-B296-94705636483D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A521B19-B2ED-4460-B296-94705636483D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A521B19-B2ED-4460-B296-94705636483D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A521B19-B2ED-4460-B296-94705636483D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AFC41D3-9543-4A7E-BE45-79FDE2557CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AFC41D3-9543-4A7E-BE45-79FDE2557CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AFC41D3-9543-4A7E-BE45-79FDE2557CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AFC41D3-9543-4A7E-BE45-79FDE2557CFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{781B729E-89E3-4F48-8334-E8532A605AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{781B729E-89E3-4F48-8334-E8532A605AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{781B729E-89E3-4F48-8334-E8532A605AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{781B729E-89E3-4F48-8334-E8532A605AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87EDB70F-60C9-48F8-8A75-ADC695246498}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87EDB70F-60C9-48F8-8A75-ADC695246498}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87EDB70F-60C9-48F8-8A75-ADC695246498}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87EDB70F-60C9-48F8-8A75-ADC695246498}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA7F71A8-BE7C-4E85-8A84-5206BBDB4F33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA7F71A8-BE7C-4E85-8A84-5206BBDB4F33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA7F71A8-BE7C-4E85-8A84-5206BBDB4F33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA7F71A8-BE7C-4E85-8A84-5206BBDB4F33}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A0E9D759-8341-4321-A90D-2B4741AF60E0} = {76D9938A-DFEC-4561-A4CA-D5C1A52D65C3}
+		{730F4EAF-431C-44FF-80DD-6CCF8F168E1F} = {A0E9D759-8341-4321-A90D-2B4741AF60E0}
+		{365DC2D1-BE3D-48C0-BA35-BEB42AF7246F} = {A0E9D759-8341-4321-A90D-2B4741AF60E0}
+		{6AFC41D3-9543-4A7E-BE45-79FDE2557CFF} = {730F4EAF-431C-44FF-80DD-6CCF8F168E1F}
+		{781B729E-89E3-4F48-8334-E8532A605AAA} = {365DC2D1-BE3D-48C0-BA35-BEB42AF7246F}
+		{87EDB70F-60C9-48F8-8A75-ADC695246498} = {4F69EFDE-CBD7-4E50-A4D6-084FE2B74447}
+		{EA7F71A8-BE7C-4E85-8A84-5206BBDB4F33} = {4F69EFDE-CBD7-4E50-A4D6-084FE2B74447}
+	EndGlobalSection
+EndGlobal
