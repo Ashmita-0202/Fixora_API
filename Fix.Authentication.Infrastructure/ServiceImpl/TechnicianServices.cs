@@ -5,6 +5,7 @@ using Fix.Shared.Domain.Abstractions;
 using Fix.Shared.Domain.IRepository;
 using Fix.Shared.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Fix.Authentication.Infrastructure.ServiceImpl
 {
@@ -13,12 +14,18 @@ namespace Fix.Authentication.Infrastructure.ServiceImpl
         private readonly IUnitOfWork _unitOfWork;
         private readonly IReviewServices _reviewServices;
         private readonly INotificationServices _notificationServices;
+        private readonly ILogger<TechnicianServices> _logger;
 
-        public TechnicianServices(IUnitOfWork unitOfWork, IReviewServices reviewServices, INotificationServices notificationServices)
+        public TechnicianServices(
+            IUnitOfWork unitOfWork,
+            IReviewServices reviewServices,
+            INotificationServices notificationServices,
+            ILogger<TechnicianServices> logger)
         {
             _unitOfWork = unitOfWork;
             _reviewServices = reviewServices;
             _notificationServices = notificationServices;
+            _logger = logger;
         }
 
         public async Task<Result<List<TechnicianResponse>>> GetPendingApplications()
@@ -86,11 +93,14 @@ namespace Fix.Authentication.Infrastructure.ServiceImpl
 
         public async Task<Result<TechnicianResponse>> Approve(string profileId)
         {
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            TechnicianProfile profile;
+            TechnicianResponse response;
+
+            try
             {
-                try
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var profile = await _unitOfWork.BaseRepository<TechnicianProfile>()
+                    profile = await _unitOfWork.BaseRepository<TechnicianProfile>()
                         .GetSingleAsync(p => p.Id == profileId);
 
                     if (profile is null)
@@ -105,30 +115,42 @@ namespace Fix.Authentication.Infrastructure.ServiceImpl
 
                     _unitOfWork.BaseRepository<TechnicianProfile>().Update(profile);
                     await _unitOfWork.SaveChangesAsync();
+                    response = (await ToResponseList(new List<TechnicianProfile> { profile })).Single();
                     scope.Complete();
-
-                    await _notificationServices.Create(
-                        profile.UserId, "success", "Application Approved",
-                        "Congratulations! Your technician application has been approved. You can now accept jobs.");
-
-                    var response = (await ToResponseList(new List<TechnicianProfile> { profile })).Single();
-                    return Result<TechnicianResponse>.Success(response);
-                }
-                catch (Exception ex)
-                {
-                    scope.Dispose();
-                    throw new Exception("An error occurred while approving the technician", ex);
                 }
             }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while approving the technician", ex);
+            }
+
+            try
+            {
+                await _notificationServices.Create(
+                    profile.UserId, "success", "Application Approved",
+                    "Congratulations! Your technician application has been approved. You can now accept jobs.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "Technician profile {TechnicianProfileId} was approved, but its notification could not be created.",
+                    profileId);
+            }
+
+            return Result<TechnicianResponse>.Success(response);
         }
 
         public async Task<Result<TechnicianResponse>> Reject(string profileId, string? reason)
         {
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            TechnicianProfile profile;
+            TechnicianResponse response;
+
+            try
             {
-                try
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    var profile = await _unitOfWork.BaseRepository<TechnicianProfile>()
+                    profile = await _unitOfWork.BaseRepository<TechnicianProfile>()
                         .GetSingleAsync(p => p.Id == profileId);
 
                     if (profile is null)
@@ -143,23 +165,32 @@ namespace Fix.Authentication.Infrastructure.ServiceImpl
 
                     _unitOfWork.BaseRepository<TechnicianProfile>().Update(profile);
                     await _unitOfWork.SaveChangesAsync();
+                    response = (await ToResponseList(new List<TechnicianProfile> { profile })).Single();
                     scope.Complete();
-
-                    await _notificationServices.Create(
-                        profile.UserId, "warning", "Application Not Approved",
-                        string.IsNullOrEmpty(reason)
-                            ? "Your technician application was not approved."
-                            : $"Your technician application was not approved. Reason: {reason}");
-
-                    var response = (await ToResponseList(new List<TechnicianProfile> { profile })).Single();
-                    return Result<TechnicianResponse>.Success(response);
-                }
-                catch (Exception ex)
-                {
-                    scope.Dispose();
-                    throw new Exception("An error occurred while rejecting the technician", ex);
                 }
             }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while rejecting the technician", ex);
+            }
+
+            try
+            {
+                await _notificationServices.Create(
+                    profile.UserId, "warning", "Application Not Approved",
+                    string.IsNullOrEmpty(reason)
+                        ? "Your technician application was not approved."
+                        : $"Your technician application was not approved. Reason: {reason}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "Technician profile {TechnicianProfileId} was rejected, but its notification could not be created.",
+                    profileId);
+            }
+
+            return Result<TechnicianResponse>.Success(response);
         }
 
         public async Task<Result<TechnicianResponse>> ToggleActiveStatus(string profileId)

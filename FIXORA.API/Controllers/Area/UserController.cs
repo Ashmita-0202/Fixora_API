@@ -30,6 +30,13 @@ namespace FIXORA.API.Controllers.Area
 
         public async Task<IActionResult> AddUser([FromBody] AddUserRequest request)
         {
+            if (request.UserRole != Fix.Shared.Domain.Models.Entities.UserRole.Customer)
+            {
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    new { Message = "Only customer accounts can be self-registered. An administrator must create technician accounts." });
+            }
+
             //Mapping command and request
 
             var command = request.ToCommand();

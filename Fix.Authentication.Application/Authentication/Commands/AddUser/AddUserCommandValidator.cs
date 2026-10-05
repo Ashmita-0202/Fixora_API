@@ -32,7 +32,13 @@ namespace Fix.Authentication.Application.Authentication.Commands.AddUser
             {
                 RuleFor(x => x.Specialty).NotEmpty().WithMessage("Specialty is required for technician registration.");
                 RuleFor(x => x.City).NotEmpty().WithMessage("City is required for technician registration.");
-                RuleFor(x => x.ExperienceYears).NotNull().WithMessage("Years of experience is required for technician registration.");
+                RuleFor(x => x.ExperienceYears)
+                    .NotNull()
+                    .WithMessage("Years of experience is required for technician registration.");
+                RuleFor(x => x.ExperienceYears)
+                    .GreaterThanOrEqualTo(0)
+                    .When(x => x.ExperienceYears.HasValue)
+                    .WithMessage("Years of experience cannot be negative.");
             });
 
         }

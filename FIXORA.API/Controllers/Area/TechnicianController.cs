@@ -1,3 +1,4 @@
+using Fix.Authentication.Application.Authentication.Commands.AddUser;
 using Fix.Authentication.Application.Authentication.Commands.ApproveTechnician;
 using Fix.Authentication.Application.Authentication.Commands.RejectTechnician;
 using Fix.Authentication.Application.Authentication.Commands.ToggleTechnicianActiveStatus;
@@ -26,6 +27,45 @@ namespace FIXORA.API.Controllers.Area
         {
             _mediator = mediator;
         }
+
+        #region Add Technician (Admin)
+        [HttpPost]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> AddTechnician([FromBody] AddTechnicianRequest request)
+        {
+            var command = new AddUserCommand(
+                request.FirstName,
+                request.LastName,
+                request.Address,
+                request.Phone,
+                request.Email,
+                request.Password,
+                Fix.Shared.Domain.Models.Entities.UserRole.Technician,
+                request.Specialty,
+                request.City,
+                request.ExperienceYears,
+                request.Certification);
+
+            var createResult = await _mediator.Send(command);
+            if (createResult is not { IsSuccess: true, Data: not null })
+            {
+                return createResult.Errors is not null
+                    ? HandleFailureResult(createResult.Errors)
+                    : BadRequest("Unable to add technician.");
+            }
+
+            var profileResult = await _mediator.Send(
+                new GetMyTechnicianProfileQuery(createResult.Data.Id.ToString()));
+
+            return profileResult switch
+            {
+                { IsSuccess: true, Data: not null } =>
+                    CreatedAtAction(nameof(GetAll), profileResult.Data),
+                { IsSuccess: false, Errors: not null } => HandleFailureResult(profileResult.Errors),
+                _ => BadRequest("Technician was created but the profile could not be loaded.")
+            };
+        }
+        #endregion
 
         #region My Profile (Technician, self)
         [HttpGet("my-profile")]
